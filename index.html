@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alex Rivera — CAD/CAM Design Portfolio</title>
+<meta name="description" content="CAD/CAM design engineering portfolio — parametric modeling, simulation, and CNC manufacturing work.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FAFAF8;
+    --paper-line:#E4E4DE;
+    --paper-line-strong:#CFCFC7;
+    --ink:#1B1E22;
+    --graphite:#5B6167;
+    --blueprint:#2B4C7E;
+    --accent:#D6602B;
+    --accent-soft:#F5E2D3;
+    --white:#FFFFFF;
+    --radius:2px;
+    --maxw:1180px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important;}
+  }
+  body{
+    margin:0;
+    background:
+      linear-gradient(var(--paper-line) 1px, transparent 1px) 0 0/40px 40px,
+      linear-gradient(90deg, var(--paper-line) 1px, transparent 1px) 0 0/40px 40px,
+      var(--paper);
+    background-attachment:fixed;
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    opacity:0.001;
+  }
+  body.ready{ opacity:1; transition:opacity .4s ease; }
+  h1,h2,h3{ font-family:'Space Grotesk', sans-serif; margin:0; font-weight:600; letter-spacing:-0.01em; }
+  p{ margin:0; }
+  a{ color:inherit; text-decoration:none; }
+  .mono{ font-family:'IBM Plex Mono', monospace; }
+  .wrap{ max-width:var(--maxw); margin:0 auto; padding:0 32px; }
+  ::selection{ background:var(--accent); color:var(--white); }
+  :focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
+
+  /* ---------- Corner registration marks (drafting motif) ---------- */
+  .reg-marks{ position:relative; }
+  .reg-marks::before, .reg-marks::after,
+  .reg-marks .rm-tr, .reg-marks .rm-br{
+    content:""; position:absolute; width:16px; height:16px; pointer-events:none;
+  }
+  .reg-marks::before{ top:0; left:0; border-top:1.5px solid var(--paper-line-strong); border-left:1.5px solid var(--paper-line-strong); }
+  .reg-marks::after{ bottom:0; left:0; border-bottom:1.5px solid var(--paper-line-strong); border-left:1.5px solid var(--paper-line-strong); }
+  .reg-marks .rm-tr{ top:0; right:0; border-top:1.5px solid var(--paper-line-strong); border-right:1.5px solid var(--paper-line-strong); }
+  .reg-marks .rm-br{ bottom:0; right:0; border-bottom:1.5px solid var(--paper-line-strong); border-right:1.5px solid var(--paper-line-strong); }
+
+  /* ---------- Header ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(250,250,248,0.88);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--paper-line-strong);
+  }
+  .nav{ display:flex; align-items:center; justify-content:space-between; height:72px; }
+  .logo{ display:flex; align-items:baseline; gap:8px; font-size:15px; }
+  .logo strong{ font-family:'Space Grotesk',sans-serif; font-weight:700; letter-spacing:0.02em; }
+  .logo span{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--accent); border:1px solid var(--accent); padding:1px 6px; border-radius:2px; }
+  nav.links{ display:flex; gap:36px; }
+  nav.links a{ font-size:14px; color:var(--graphite); position:relative; padding:4px 0; }
+  nav.links a:hover{ color:var(--ink); }
+  nav.links a::after{ content:""; position:absolute; left:0; bottom:0; width:0; height:1px; background:var(--accent); transition:width .25s ease; }
+  nav.links a:hover::after{ width:100%; }
+  .nav-cta{ font-size:13px; padding:9px 16px; border:1px solid var(--ink); border-radius:2px; }
+  .nav-cta:hover{ background:var(--ink); color:var(--white); }
+  .burger{ display:none; background:none; border:1px solid var(--paper-line-strong); border-radius:2px; width:40px; height:36px; cursor:pointer; }
+  .burger span{ display:block; width:18px; height:1.5px; background:var(--ink); margin:3px auto; }
+  .mobile-panel{ display:none; flex-direction:column; gap:2px; padding:8px 0 20px; border-bottom:1px solid var(--paper-line-strong); }
+  .mobile-panel a{ padding:12px 4px; font-size:15px; border-bottom:1px solid var(--paper-line); }
+  header.open .mobile-panel{ display:flex; }
+
+  @media (max-width:860px){
+    nav.links, .nav-cta{ display:none; }
+    .burger{ display:block; }
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{ padding:88px 0 64px; }
+  .hero-grid{ display:grid; grid-template-columns:1.05fr 0.95fr; gap:48px; align-items:center; }
+  .eyebrow{ display:flex; align-items:center; gap:10px; font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--blueprint); letter-spacing:0.06em; margin-bottom:22px; }
+  .eyebrow .dot{ width:6px; height:6px; background:var(--accent); border-radius:50%; }
+  .hero h1{ font-size:clamp(38px,5vw,58px); line-height:1.05; }
+  .hero h1 em{ font-style:normal; color:var(--blueprint); }
+  .hero p.lede{ font-size:17px; line-height:1.65; color:var(--graphite); margin:24px 0 34px; max-width:46ch; }
+  .hero-cta{ display:flex; gap:14px; flex-wrap:wrap; }
+  .btn{ font-size:14px; padding:13px 22px; border-radius:2px; display:inline-flex; align-items:center; gap:8px; }
+  .btn-primary{ background:var(--ink); color:var(--white); border:1px solid var(--ink); }
+  .btn-primary:hover{ background:var(--blueprint); border-color:var(--blueprint); }
+  .btn-ghost{ border:1px solid var(--paper-line-strong); color:var(--ink); }
+  .btn-ghost:hover{ border-color:var(--ink); }
+
+  .hero-meta{ display:flex; gap:28px; margin-top:44px; font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--graphite); }
+  .hero-meta div strong{ display:block; color:var(--ink); font-size:15px; font-family:'Space Grotesk',sans-serif; margin-bottom:2px; }
+
+  /* Hero isometric drawing */
+  .drawing-panel{ position:relative; background:var(--white); border:1px solid var(--paper-line-strong); border-radius:4px; padding:18px; }
+  .panel-label{ display:flex; justify-content:space-between; font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--graphite); margin-bottom:8px; }
+  .panel-label b{ color:var(--ink); }
+  #iso-svg path, #iso-svg ellipse{
+    stroke-dasharray:900; stroke-dashoffset:900;
+    animation:draw 1.8s ease forwards;
+  }
+  #iso-svg .dim{ stroke-dasharray:200; stroke-dashoffset:200; animation:draw 1s ease forwards; animation-delay:1.6s; }
+  #iso-svg path:nth-child(2){ animation-delay:.15s; }
+  #iso-svg path:nth-child(3){ animation-delay:.3s; }
+  #iso-svg path:nth-child(4){ animation-delay:.45s; }
+  #iso-svg path:nth-child(5){ animation-delay:.6s; }
+  @keyframes draw{ to{ stroke-dashoffset:0; } }
+
+  @media (max-width:860px){
+    .hero-grid{ grid-template-columns:1fr; }
+    .drawing-panel{ order:-1; }
+  }
+
+  /* ---------- Section shell ---------- */
+  section{ padding:88px 0; border-top:1px solid var(--paper-line-strong); }
+  .sec-head{ display:flex; justify-content:space-between; align-items:flex-end; gap:24px; margin-bottom:48px; flex-wrap:wrap; }
+  .sec-tag{ font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--accent); letter-spacing:0.08em; margin-bottom:10px; display:block; }
+  .sec-head h2{ font-size:clamp(26px,3vw,34px); }
+  .sec-head p{ color:var(--graphite); font-size:14.5px; max-width:38ch; }
+
+  /* ---------- Work grid ---------- */
+  .work-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:28px; }
+  @media (max-width:760px){ .work-grid{ grid-template-columns:1fr; } }
+  .card{ background:var(--white); border:1px solid var(--paper-line-strong); border-radius:4px; overflow:hidden; transition:transform .25s ease, box-shadow .25s ease; }
+  .card:hover{ transform:translateY(-3px); box-shadow:0 12px 28px rgba(27,30,34,0.08); }
+  .card-art{ position:relative; height:190px; background:
+      repeating-linear-gradient(45deg, #F1F1EC 0, #F1F1EC 1px, transparent 1px, transparent 10px), var(--paper);
+    display:flex; align-items:center; justify-content:center; border-bottom:1px solid var(--paper-line-strong);
+  }
+  .card-body{ padding:22px 22px 0; }
+  .card-body .kicker{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--blueprint); margin-bottom:8px; display:block; }
+  .card-body h3{ font-size:19px; margin-bottom:8px; }
+  .card-body p{ font-size:14px; color:var(--graphite); line-height:1.55; margin-bottom:16px; }
+  .tags{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:20px; }
+  .tags span{ font-size:11px; font-family:'IBM Plex Mono',monospace; border:1px solid var(--paper-line-strong); padding:3px 8px; border-radius:2px; color:var(--graphite); }
+
+  /* title block footer, drafting-sheet style */
+  .titleblock{ display:grid; grid-template-columns:repeat(4,1fr); border-top:1px solid var(--paper-line-strong); font-family:'IBM Plex Mono',monospace; font-size:10.5px; }
+  .titleblock div{ padding:10px 12px; border-right:1px solid var(--paper-line-strong); }
+  .titleblock div:last-child{ border-right:none; }
+  .titleblock label{ display:block; color:var(--graphite); font-size:9px; letter-spacing:0.05em; margin-bottom:3px; }
+  .titleblock strong{ color:var(--ink); font-weight:500; }
+
+  /* ---------- Process (real sequence) ---------- */
+  .process{ position:relative; }
+  .process-row{ display:grid; grid-template-columns:repeat(6,1fr); gap:0; }
+  @media (max-width:900px){ .process-row{ grid-template-columns:repeat(2,1fr); gap:28px 20px; } }
+  .step{ position:relative; padding:0 18px 0 0; }
+  .step:not(:last-child)::after{
+    content:""; position:absolute; top:15px; right:-2px; width:calc(100% - 40px); height:1px;
+    background:repeating-linear-gradient(90deg, var(--paper-line-strong) 0 6px, transparent 6px 11px);
+  }
+  @media (max-width:900px){ .step:not(:last-child)::after{ display:none; } }
+  .step .num{ font-family:'IBM Plex Mono',monospace; font-size:13px; color:var(--accent); border:1px solid var(--accent); width:30px; height:30px; display:flex; align-items:center; justify-content:center; border-radius:50%; margin-bottom:16px; }
+  .step h3{ font-size:15px; margin-bottom:8px; }
+  .step p{ font-size:13px; color:var(--graphite); line-height:1.55; }
+
+  /* ---------- Skills / spec table ---------- */
+  .spec-table{ width:100%; border-collapse:collapse; }
+  .spec-table th{ text-align:left; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:0.05em; color:var(--graphite); font-weight:500; padding:10px 16px; border-bottom:1.5px solid var(--ink); }
+  .spec-table td{ padding:16px; border-bottom:1px solid var(--paper-line-strong); font-size:14px; vertical-align:top; }
+  .spec-table td:first-child{ font-family:'Space Grotesk',sans-serif; font-weight:600; width:22%; }
+  .spec-table td span{ display:inline-block; font-size:12.5px; color:var(--graphite); background:var(--paper); border:1px solid var(--paper-line-strong); padding:4px 9px; border-radius:2px; margin:3px 6px 3px 0; }
+
+  /* ---------- About ---------- */
+  .about-grid{ display:grid; grid-template-columns:0.8fr 1.2fr; gap:56px; align-items:start; }
+  @media (max-width:800px){ .about-grid{ grid-template-columns:1fr; } }
+  .headshot{ aspect-ratio:4/5; background:var(--white); border:1px solid var(--paper-line-strong); border-radius:4px; display:flex; align-items:center; justify-content:center; }
+  .about-copy p{ display:block; font-size:15.5px; line-height:1.75; color:var(--graphite); margin-bottom:18px; }
+  .stat-row{ display:flex; gap:40px; margin-top:32px; flex-wrap:wrap; }
+  .stat-row div strong{ display:block; font-size:28px; font-family:'Space Grotesk',sans-serif; color:var(--ink); }
+  .stat-row div span{ font-size:12px; color:var(--graphite); font-family:'IBM Plex Mono',monospace; }
+
+  /* ---------- Contact / footer titleblock ---------- */
+  footer{ border-top:1px solid var(--paper-line-strong); padding:80px 0 0; }
+  .contact-head{ display:flex; justify-content:space-between; align-items:flex-end; gap:24px; flex-wrap:wrap; margin-bottom:56px; }
+  .contact-head h2{ font-size:clamp(30px,4vw,46px); max-width:14ch; }
+  .contact-links{ display:flex; flex-direction:column; gap:10px; align-items:flex-end; }
+  .contact-links a{ font-family:'IBM Plex Mono',monospace; font-size:14px; border-bottom:1px solid transparent; }
+  .contact-links a:hover{ border-color:var(--accent); color:var(--accent); }
+  .footer-titleblock{ border-top:1.5px solid var(--ink); }
+  .ft-row{ display:grid; grid-template-columns:repeat(6,1fr); }
+  @media (max-width:760px){ .ft-row{ grid-template-columns:repeat(3,1fr); } .ft-row div:nth-child(n+4){ border-top:1px solid var(--paper-line-strong); } }
+  .ft-row div{ padding:14px 16px; border-right:1px solid var(--paper-line-strong); font-family:'IBM Plex Mono',monospace; }
+  .ft-row div:last-child{ border-right:none; }
+  .ft-row label{ display:block; font-size:9px; color:var(--graphite); letter-spacing:0.05em; margin-bottom:4px; }
+  .ft-row strong{ font-size:12px; }
+  .bottom-line{ display:flex; justify-content:space-between; padding:18px 0; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--graphite); flex-wrap:wrap; gap:8px; }
+
+  /* scroll reveal */
+  .reveal{ opacity:0; transform:translateY(18px); transition:opacity .6s ease, transform .6s ease; }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+</style>
+</head>
+<body>
+
+<header id="siteHeader">
+  <div class="wrap nav">
+    <a href="#top" class="logo"><strong>ALEX&nbsp;RIVERA</strong><span>REV.A</span></a>
+    <nav class="links">
+      <a href="#work">Work</a>
+      <a href="#process">Process</a>
+      <a href="#skills">Skills</a>
+      <a href="#about">About</a>
+    </nav>
+    <a href="#contact" class="nav-cta">Get in touch</a>
+    <button class="burger" id="burgerBtn" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <div class="wrap mobile-panel" id="mobilePanel">
+    <a href="#work">Work</a>
+    <a href="#process">Process</a>
+    <a href="#skills">Skills</a>
+    <a href="#about">About</a>
+    <a href="#contact">Get in touch</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero" style="border-top:none; padding-top:64px;">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="eyebrow"><span class="dot"></span> CAD / CAM DESIGN ENGINEER — OPEN TO PROJECTS</div>
+        <h1>Precision from<br><em>concept to G-code.</em></h1>
+        <p class="lede">I design and manufacture mechanical parts and assemblies — parametric CAD modeling, simulation-driven iteration, and CAM toolpaths tuned for real machines, not just renders.</p>
+        <div class="hero-cta">
+          <a href="#work" class="btn btn-primary">View selected work →</a>
+          <a href="#contact" class="btn btn-ghost">Download resume</a>
+        </div>
+        <div class="hero-meta">
+          <div><strong>6+ yrs</strong>practice</div>
+          <div><strong>40+</strong>parts released</div>
+          <div><strong>±0.02mm</strong>typical tolerance</div>
+        </div>
+      </div>
+
+      <div class="drawing-panel reg-marks">
+        <span class="rm-tr"></span><span class="rm-br"></span>
+        <div class="panel-label"><span>FIG.01 — ISOMETRIC</span><span><b>SCALE</b> 1:1&nbsp;&nbsp;<b>UNITS</b> MM</span></div>
+        <svg id="iso-svg" viewBox="0 0 320 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- top face -->
+          <path d="M160 40 L245 88 L160 136 L75 88 Z" stroke="#1B1E22" stroke-width="1.6" stroke-linejoin="round"/>
+          <!-- left face -->
+          <path d="M75 88 L160 136 L160 224 L75 176 Z" stroke="#1B1E22" stroke-width="1.6" stroke-linejoin="round"/>
+          <!-- right face -->
+          <path d="M160 136 L245 88 L245 176 L160 224 Z" stroke="#1B1E22" stroke-width="1.6" stroke-linejoin="round"/>
+          <!-- bore hole on top -->
+          <ellipse cx="160" cy="88" rx="26" ry="15" stroke="#2B4C7E" stroke-width="1.4"/>
+          <!-- dimension line -->
+          <path class="dim" d="M262 88 L282 88 M262 176 L282 176 M275 88 L275 176" stroke="#D6602B" stroke-width="1.2"/>
+          <!-- leader + callout -->
+          <path class="dim" d="M186 78 L214 54" stroke="#D6602B" stroke-width="1.2"/>
+          <circle class="dim" cx="214" cy="54" r="3" fill="#D6602B"/>
+          <text x="222" y="58" font-family="IBM Plex Mono, monospace" font-size="11" fill="#5B6167">⌀12 H7</text>
+          <text x="286" y="135" font-family="IBM Plex Mono, monospace" font-size="11" fill="#5B6167">88</text>
+        </svg>
+        <div class="panel-label" style="margin-top:6px; border-top:1px solid var(--paper-line); padding-top:8px;">
+          <span>MATERIAL: AL 6061-T6</span><span>TOL: ±0.05</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORK -->
+  <section id="work">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <div>
+          <span class="sec-tag">// SELECTED WORK</span>
+          <h2>Six projects, sheet by sheet.</h2>
+        </div>
+        <p>Each project below is placeholder content — swap in your own renders, drawings, and specs.</p>
+      </div>
+
+      <div class="work-grid">
+
+        <div class="card reveal">
+          <div class="card-art"><svg width="70" height="70" viewBox="0 0 70 70"><path d="M35 8 L60 22 L60 48 L35 62 L10 48 L10 22 Z" stroke="#CFCFC7" stroke-width="1.4" fill="none"/><circle cx="35" cy="35" r="10" stroke="#CFCFC7" stroke-width="1.4" fill="none"/></svg></div>
+          <div class="card-body">
+            <span class="kicker">01 / GEARBOX</span>
+            <h3>Modular Gearbox Housing</h3>
+            <p>Split-line housing redesigned for single-setup 3-axis milling, cutting fixture changeovers from four to one.</p>
+            <div class="tags"><span>SolidWorks</span><span>3-Axis CNC</span><span>Al 6061</span></div>
+          </div>
+          <div class="titleblock">
+            <div><label>DWG NO</label><strong>PN-24-014</strong></div>
+            <div><label>SCALE</label><strong>1:2</strong></div>
+            <div><label>MATERIAL</label><strong>AL 6061</strong></div>
+            <div><label>REV</label><strong>C</strong></div>
+          </div>
+        </div>
+
+        <div class="card reveal">
+          <div class="card-art"><svg width="70" height="70" viewBox="0 0 70 70"><path d="M10 55 L35 10 L60 55 Z" stroke="#CFCFC7" stroke-width="1.4" fill="none"/><path d="M20 55 L50 55" stroke="#CFCFC7" stroke-width="1.4"/></svg></div>
+          <div class="card-body">
+            <span class="kicker">02 / AEROSPACE</span>
+            <h3>Parametric Drone Frame</h3>
+            <p>Fully parametric arm/frame family driven by payload and motor spec, validated with modal + drop-test FEA.</p>
+            <div class="tags"><span>Fusion 360</span><span>5-Axis CNC</span><span>Carbon-PA</span></div>
+          </div>
+          <div class="titleblock">
+            <div><label>DWG NO</label><strong>PN-24-021</strong></div>
+            <div><label>SCALE</label><strong>1:1</strong></div>
+            <div><label>MATERIAL</label><strong>CF-PA12</strong></div>
+            <div><label>REV</label><strong>B</strong></div>
+          </div>
+        </div>
+
+        <div class="card reveal">
+          <div class="card-art"><svg width="70" height="70" viewBox="0 0 70 70"><rect x="12" y="12" width="46" height="46" stroke="#CFCFC7" stroke-width="1.4" fill="none"/><path d="M12 12 L58 58 M58 12 L12 58" stroke="#CFCFC7" stroke-width="1"/></svg></div>
+          <div class="card-body">
+            <span class="kicker">03 / TOOLING</span>
+            <h3>Injection Mold Tooling — Enclosure</h3>
+            <p>Two-plate mold with side-action lifters for a snap-fit enclosure; core/cavity EDM'd to a 0.3 Ra finish.</p>
+            <div class="tags"><span>CATIA</span><span>EDM + CNC</span><span>P20 Steel</span></div>
+          </div>
+          <div class="titleblock">
+            <div><label>DWG NO</label><strong>PN-23-098</strong></div>
+            <div><label>SCALE</label><strong>1:1</strong></div>
+            <div><label>MATERIAL</label><strong>P20 TOOL STL</strong></div>
+            <div><label>REV</label><strong>A</strong></div>
+          </div>
+        </div>
+
+        <div class="card reveal">
+          <div class="card-art"><svg width="70" height="70" viewBox="0 0 70 70"><path d="M35 10 V60 M15 25 H55 M15 45 H55" stroke="#CFCFC7" stroke-width="1.4"/><circle cx="35" cy="35" r="22" stroke="#CFCFC7" stroke-width="1.2" fill="none"/></svg></div>
+          <div class="card-body">
+            <span class="kicker">04 / ROBOTICS</span>
+            <h3>Robotic Gripper Assembly</h3>
+            <p>Underactuated two-finger gripper; FDM'd links for iteration, final jaw inserts machined in-house.</p>
+            <div class="tags"><span>SolidWorks</span><span>FDM + CNC</span><span>PLA / Al</span></div>
+          </div>
+          <div class="titleblock">
+            <div><label>DWG NO</label><strong>PN-24-002</strong></div>
+            <div><label>SCALE</label><strong>2:1</strong></div>
+            <div><label>MATERIAL</label><strong>AL 7075</strong></div>
+            <div><label>REV</label><strong>D</strong></div>
+          </div>
+        </div>
+
+        <div class="card reveal">
+          <div class="card-art"><svg width="70" height="70" viewBox="0 0 70 70"><path d="M12 50 Q35 5 58 50" stroke="#CFCFC7" stroke-width="1.4" fill="none"/><path d="M12 50 H58" stroke="#CFCFC7" stroke-width="1.4"/></svg></div>
+          <div class="card-body">
+            <span class="kicker">05 / FIXTURING</span>
+            <h3>Turbine Blade Inspection Fixture</h3>
+            <p>Contour-matched fixture holding blade profile to ±0.02 mm for CMM inspection across a 40-part batch.</p>
+            <div class="tags"><span>Fusion 360</span><span>3-Axis CNC</span><span>7075-T6</span></div>
+          </div>
+          <div class="titleblock">
+            <div><label>DWG NO</label><strong>PN-23-071</strong></div>
+            <div><label>SCALE</label><strong>1:1</strong></div>
+            <div><label>MATERIAL</label><strong>AL 7075-T6</strong></div>
+            <div><label>REV</label><strong>A</strong></div>
+          </div>
+        </div>
+
+        <div class="card reveal">
+          <div class="card-art"><svg width="70" height="70" viewBox="0 0 70 70"><path d="M15 55 L30 15 L45 45 L55 20" stroke="#CFCFC7" stroke-width="1.4" fill="none" stroke-linejoin="round"/></svg></div>
+          <div class="card-body">
+            <span class="kicker">06 / TOPOLOGY OPT.</span>
+            <h3>Topology-Optimized Suspension Bracket</h3>
+            <p>Load-case-driven optimization cut mass by 34% while holding factor of safety above 2.5, built via DMLS.</p>
+            <div class="tags"><span>nTopology</span><span>DMLS</span><span>Ti-6Al-4V</span></div>
+          </div>
+          <div class="titleblock">
+            <div><label>DWG NO</label><strong>PN-25-005</strong></div>
+            <div><label>SCALE</label><strong>1:1</strong></div>
+            <div><label>MATERIAL</label><strong>TI-6AL-4V</strong></div>
+            <div><label>REV</label><strong>B</strong></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section id="process">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <div>
+          <span class="sec-tag">// HOW A PART GETS MADE</span>
+          <h2>Concept to shop floor, one pipeline.</h2>
+        </div>
+        <p>The actual sequence I run every part through, concept to sign-off.</p>
+      </div>
+      <div class="process-row reveal">
+        <div class="step"><div class="num">01</div><h3>Requirements</h3><p>Loads, envelope, tolerances, and cost target defined before any geometry exists.</p></div>
+        <div class="step"><div class="num">02</div><h3>Parametric CAD</h3><p>Feature-based model built so downstream changes stay one parameter away.</p></div>
+        <div class="step"><div class="num">03</div><h3>Simulation</h3><p>FEA / modal / thermal validation against the real load cases, not defaults.</p></div>
+        <div class="step"><div class="num">04</div><h3>CAM Programming</h3><p>Toolpaths, fixturing, and stock setup planned for the actual machine on the floor.</p></div>
+        <div class="step"><div class="num">05</div><h3>Prototype</h3><p>First article machined or printed, measured against drawing on the CMM.</p></div>
+        <div class="step"><div class="num">06</div><h3>Sign-off</h3><p>Revision locked, drawing released, documentation handed to production.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <div class="wrap">
+      <div class="sec-head reveal">
+        <div>
+          <span class="sec-tag">// TOOLS &amp; PROCESSES</span>
+          <h2>Software and machines I work in daily.</h2>
+        </div>
+      </div>
+      <table class="spec-table reveal">
+        <thead><tr><th>Category</th><th>Tools / Processes</th></tr></thead>
+        <tbody>
+          <tr><td>CAD</td><td><span>SolidWorks</span><span>Fusion 360</span><span>CATIA V5</span><span>Onshape</span></td></tr>
+          <tr><td>Simulation</td><td><span>SolidWorks FEA</span><span>Ansys Mechanical</span><span>Moldflow</span><span>nTopology</span></td></tr>
+          <tr><td>CAM</td><td><span>Mastercam</span><span>Fusion CAM</span><span>PowerMill</span></td></tr>
+          <tr><td>Manufacturing</td><td><span>3 &amp; 5-axis CNC milling</span><span>CNC turning</span><span>EDM</span><span>DMLS / FDM printing</span></td></tr>
+          <tr><td>Metrology</td><td><span>CMM programming</span><span>GD&amp;T (ASME Y14.5)</span><span>Surface profilometry</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="wrap about-grid">
+      <div class="reveal">
+        <div class="headshot reg-marks">
+          <span class="rm-tr"></span><span class="rm-br"></span>
+          <span class="mono" style="font-size:12px; color:var(--graphite);">PHOTO — 4:5</span>
+        </div>
+      </div>
+      <div class="about-copy reveal">
+        <span class="sec-tag">// ABOUT</span>
+        <h2 style="margin-bottom:20px; font-size:clamp(24px,3vw,32px);">I build the part before I build the part.</h2>
+        <p>I'm a CAD/CAM design engineer working across consumer hardware, aerospace tooling, and industrial fixtures. My background is split evenly between the design side — parametric modeling and simulation — and the manufacturing side, running CNC programs on the shop floor myself.</p>
+        <p>That combination means I design parts that are already thinking about fixturing, tool access, and tolerance stack-up before the drawing is ever released. Placeholder bio — replace with your own background, education, and specialties.</p>
+        <div class="stat-row">
+          <div><strong>6+</strong><span>YEARS PRACTICE</span></div>
+          <div><strong>40+</strong><span>PARTS RELEASED</span></div>
+          <div><strong>12</strong><span>MATERIALS QUALIFIED</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer id="contact">
+  <div class="wrap">
+    <div class="contact-head reveal">
+      <h2>Let's design<br>something precise.</h2>
+      <div class="contact-links">
+        <a href="mailto:hello@alexrivera.design">hello@alexrivera.design</a>
+        <a href="https://linkedin.com/in/alexrivera" target="_blank" rel="noopener">linkedin.com/in/alexrivera</a>
+        <a href="https://github.com/alexrivera" target="_blank" rel="noopener">github.com/alexrivera</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-titleblock">
+    <div class="wrap" style="padding:0;">
+      <div class="ft-row">
+        <div><label>DRAWN BY</label><strong>A. RIVERA</strong></div>
+        <div><label>SHEET</label><strong>01</strong></div>
+        <div><label>OF</label><strong>01</strong></div>
+        <div><label>SCALE</label><strong>N/A</strong></div>
+        <div><label>DATE</label><strong id="footDate">—</strong></div>
+        <div><label>REV</label><strong>A</strong></div>
+      </div>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="bottom-line">
+      <span>© <span id="year"></span> Alex Rivera — CAD/CAM Design Portfolio</span>
+      <span>Built &amp; hosted on GitHub Pages</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.body.classList.add('ready');
+  document.getElementById('year').textContent = new Date().getFullYear();
+  document.getElementById('footDate').textContent = new Date().toISOString().slice(0,10);
+
+  // mobile nav
+  const burger = document.getElementById('burgerBtn');
+  const header = document.getElementById('siteHeader');
+  burger.addEventListener('click', () => {
+    const open = header.classList.toggle('open');
+    burger.setAttribute('aria-expanded', open);
+  });
+  document.querySelectorAll('.mobile-panel a').forEach(a => a.addEventListener('click', () => header.classList.remove('open')));
+
+  // scroll reveal
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
